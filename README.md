@@ -28,6 +28,28 @@ bunx skills add -g ifBars/youtube-video-context
 
 Then ask your agent to use `$youtube-video-context` with a YouTube video URL, playlist URL, or search topic.
 
+## Setup
+
+For the best output, give the skill a Gemini API key. Google lets you create one in [Google AI Studio](https://aistudio.google.com/app/apikey), and the Gemini API has a free tier within Google's current rate limits.
+
+Set the key in your shell before running the script:
+
+```powershell
+$env:GEMINI_API_KEY = "your-key-here"
+```
+
+On macOS or Linux:
+
+```bash
+export GEMINI_API_KEY="your-key-here"
+```
+
+That is enough for the skill to ask Gemini for visual and audio analysis of public YouTube links. The script does not save the key.
+
+You can still run the skill without Gemini. With `yt-dlp` installed, it can collect metadata and captions and write a partial context pack. Gemini is what makes the video/audio analysis useful.
+
+Google changes free-tier limits over time. Check the [Gemini API rate limits](https://ai.google.dev/gemini-api/docs/rate-limits) and [pricing](https://ai.google.dev/gemini-api/docs/pricing) pages if you are running a lot of videos.
+
 ## What it does
 
 - Ingests one public YouTube video.
@@ -89,26 +111,6 @@ Playlist and search runs also create a collection pack:
 ```
 
 Read `codex_context.md` first. Open captions, frame indexes, or metadata only when you need to verify a timestamped claim.
-
-## Validate
-
-Run the tests:
-
-```bash
-bun run test
-```
-
-Build the distribution zip:
-
-```bash
-bun run package
-```
-
-The zip is written to `dist/youtube-video-context.zip`.
-
-## skills.sh
-
-There is no separate skills.sh submission step. Once users install the public GitHub repo with the Skills CLI, it can appear on skills.sh through anonymous install telemetry.
 
 ## License
 
