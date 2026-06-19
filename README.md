@@ -1,40 +1,42 @@
-# YouTube Video Context
+# YouTube video context
 
-Turn public YouTube videos, playlists, or search topics into timestamped local context packs that coding agents can use as evidence.
+Give an agent a YouTube link and let it turn the video into a local, timestamped context pack.
 
-This skill is for agentic coding workflows where a human provides YouTube evidence, research, gameplay footage, UI references, walkthroughs, demos, talks, or tutorials and expects the agent to extract only the context it needs.
+This is useful when a video is part of the evidence: gameplay footage, UI references, tutorials, demos, talks, walkthroughs, bug repros, or research. The agent gets a saved context file it can read later instead of guessing from the title or asking you to summarize the clip by hand.
+
+It also works with playlists and search topics. Those are kept bounded with `--max-videos`, so a broad playlist does not turn into an accidental research dump.
 
 ## Install
 
-With the Skills CLI:
+Install with the Skills CLI:
 
 ```bash
 bunx skills add ifBars/youtube-video-context
 ```
 
-The official Skills CLI docs also show:
+You can also use npm or another package runner:
 
 ```bash
 npx skills add ifBars/youtube-video-context
 ```
 
-Install globally when you want the skill available across projects:
+For a global install:
 
 ```bash
 bunx skills add -g ifBars/youtube-video-context
 ```
 
-After install, ask your agent to use `$youtube-video-context` with a YouTube video URL, playlist URL, or search topic.
+Then ask your agent to use `$youtube-video-context` with a YouTube video URL, playlist URL, or search topic.
 
-## What It Does
+## What it does
 
-- Ingests a single public YouTube URL.
-- Expands playlist URLs into bounded per-video context packs.
-- Searches YouTube from a topic or task when `--source-type search` is used, or automatically when the input is not a URL.
+- Ingests one public YouTube video.
+- Expands playlist URLs into per-video context packs.
+- Searches YouTube from a topic or task when the input is not a URL, or when `--source-type search` is set.
 - Captures metadata and captions with `yt-dlp` when available.
-- Optionally asks Gemini to analyze public YouTube URLs directly for visual and audio observations.
-- Optionally downloads media and samples frames when local visual evidence is needed.
-- Writes self-contained context packs under `.codex/video-context/`.
+- Can use Gemini for direct visual and audio analysis of public YouTube links.
+- Can download video and sample frames when local visual evidence is needed.
+- Writes everything under `.codex/video-context/` so future agents can inspect the same evidence.
 
 ## Examples
 
@@ -58,16 +60,16 @@ python scripts/ingest_youtube_video.py "cozy factory automation UI references" -
 
 ## Dependencies
 
-- Python 3.10+.
-- `yt-dlp` is required for playlist expansion, search discovery, rich metadata, captions, and media downloads.
-- `ffmpeg` is required only for frame extraction after `--download-video`.
-- `GEMINI_API_KEY` or `GOOGLE_API_KEY` is optional but recommended for public YouTube visual/audio analysis.
+- Python 3.10+
+- `yt-dlp` for playlists, search, metadata, captions, and media downloads
+- `ffmpeg` only when using `--download-video` for frame extraction
+- `GEMINI_API_KEY` or `GOOGLE_API_KEY` for optional Gemini analysis
 
-No API keys are stored in the skill. Set keys in your shell environment when needed.
+No API keys are stored in the skill. Set them in your shell when you need Gemini.
 
-## Generated Context
+## Output
 
-Single-video packs are written to:
+Single-video packs:
 
 ```text
 .codex/video-context/<video-id>/
@@ -78,7 +80,7 @@ Single-video packs are written to:
   run_manifest.json
 ```
 
-Playlist and search ingestion also create:
+Playlist and search runs also create a collection pack:
 
 ```text
 .codex/video-context/_collections/<collection-slug>/
@@ -86,17 +88,17 @@ Playlist and search ingestion also create:
   codex_context.md
 ```
 
-Agents should read `codex_context.md` first, then inspect raw captions, frame indexes, or metadata only when timestamp evidence matters.
+Read `codex_context.md` first. Open captions, frame indexes, or metadata only when you need to verify a timestamped claim.
 
 ## Validate
 
-Run the included unit tests:
+Run the tests:
 
 ```bash
 bun run test
 ```
 
-Create a distribution zip:
+Build the distribution zip:
 
 ```bash
 bun run package
@@ -104,9 +106,9 @@ bun run package
 
 The zip is written to `dist/youtube-video-context.zip`.
 
-## Publishing And skills.sh
+## skills.sh
 
-skills.sh does not require a separate registry submission. Public GitHub repos with discoverable `SKILL.md` files can be installed with the Skills CLI, and installs are reflected on skills.sh through anonymous install telemetry.
+There is no separate skills.sh submission step. Once users install the public GitHub repo with the Skills CLI, it can appear on skills.sh through anonymous install telemetry.
 
 ## License
 
