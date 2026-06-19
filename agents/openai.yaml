@@ -1,0 +1,4 @@
+interface:
+  display_name: "YouTube Video Context"
+  short_description: "Turn videos into agent context packs"
+  default_prompt: "Use $youtube-video-context to ingest this YouTube link into a timestamped Codex context pack."

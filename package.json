@@ -1,0 +1,10 @@
+{
+  "name": "youtube-video-context",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Agent skill for turning YouTube videos, playlists, and search topics into timestamped context packs.",
+  "scripts": {
+    "test": "python -m unittest discover -s scripts -p \"test_*.py\"",
+    "package": "python tools/package_skill.py"
+  }
+}
